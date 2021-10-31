@@ -14,8 +14,7 @@ public class AnalysisReader {
 		List<String> fileLines = new ArrayList<String>();
 		try{
 
-			File file = new File("src/main/resources/" + fileName);
-			BufferedReader reader = new BufferedReader(new FileReader(file));
+			BufferedReader reader = allocateObjects(fileName);
 			String line;
         	while ((line = reader.readLine()) != null) {
             	fileLines.add(line);
@@ -25,6 +24,16 @@ public class AnalysisReader {
 			new ArquivoNaoEncontradoException(fileName);
 		}
 		return fileLines;
+	}
+
+	private BufferedReader allocateObjects(String fileName) throws ArquivoNaoEncontradoException {
+		try{
+		File file = new File("src/main/resources/" + fileName);
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		return reader;
+		} catch (Exception e) {
+			throw new ArquivoNaoEncontradoException(fileName); 
+		}
 	}
 
 	public AnalysisReader(String fileName) throws ArquivoNaoEncontradoException{
