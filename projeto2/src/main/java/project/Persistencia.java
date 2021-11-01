@@ -1,6 +1,8 @@
 package main.java.project;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,15 @@ public class Persistencia {
 			throw new ArquivoNaoEncontradoException(fileName);
 		}
 		return fileLines;
+	}
+
+	public boolean writeFileContent(String[] parseList, BufferedWriter writer) throws IOException {
+		for (String line : parseList) {
+			writer.write(line);
+			writer.newLine();
+		}
+		writer.close();
+		return true;
 	}
 
 }

@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import main.java.project.exception.EscritaNaoPermitidaException;
 
-public class AnalysisWriter {
+public class AnalysisWriter extends Persistencia {
 	private boolean writeSuccess;
 
 	public AnalysisWriter(String[] parseList, int inputFileFormat, String inputFilePath, String fileName)
@@ -40,12 +40,7 @@ public class AnalysisWriter {
 			throws IOException {
 		File completeFile = new File(filePath, fileName);
 		BufferedWriter writer = new BufferedWriter(new FileWriter(completeFile));
-		for (String line : parseList) {
-			writer.write(line);
-			writer.newLine();
-		}
-		writer.close();
-		return true;
+		return super.writeFileContent(parseList, writer);
 	}
 
 	public boolean isWriteSuccess() {
