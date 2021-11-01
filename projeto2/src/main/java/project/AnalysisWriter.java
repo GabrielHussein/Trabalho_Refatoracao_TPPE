@@ -9,11 +9,6 @@ import main.java.project.exception.EscritaNaoPermitidaException;
 
 public class AnalysisWriter {
 	private boolean writeSuccess;
-	private String singleLine = "";
-	private int parseListLength;
-	private String[] arrayAux;
-	private int arraySize;
-	private int lineCounter = 0;
 
 	public AnalysisWriter(String[] parseList, int inputFileFormat, String inputFilePath, String fileName)
 			throws EscritaNaoPermitidaException, IOException {
@@ -25,18 +20,8 @@ public class AnalysisWriter {
 		fileName = fileName.replace(".out", "");
 		fileName = fileName + "Tab.out";
 		if (canWriteOnFile(filePath)) {
-			parseListLength = parseList.length;
-
-			arrayAux = parseList[0].split(";");
-			arraySize = arrayAux.length;
-
-			int counter = 0;
-
-			for (int k = 0; k < parseListLength; k++) {
-				singleLine += counter + ";";
-				counter++;
-			}
-			setWriteSuccess(writeOnFile(filePath, fileName, fileFormat, parseList));
+			String[] organizedContent = new FileContent().fileContent(fileFormat, parseList);
+			setWriteSuccess(writeOnFile(filePath, fileName, fileFormat, organizedContent));
 		} else {
 			setWriteSuccess(false);
 			throw new EscritaNaoPermitidaException();
@@ -55,27 +40,11 @@ public class AnalysisWriter {
 			throws IOException {
 		File completeFile = new File(filePath, fileName);
 		BufferedWriter writer = new BufferedWriter(new FileWriter(completeFile));
-		if (fileFormat == 0) {
-			writer.write(singleLine);
+		for (String line : parseList) {
+			writer.write(line);
 			writer.newLine();
-			for (int i = 1; i < arraySize; i++) {
-				singleLine = "";
-				for (int j = 0; j < parseListLength; j++) {
-					singleLine += parseList[j].split(";")[i] + ";";
-				}
-				writer.write(singleLine);
-				writer.newLine();
-			}
-			writer.close();
-		} else {
-			for (String line : parseList) {
-				singleLine = lineCounter + line;
-				writer.write(singleLine);
-				writer.newLine();
-				lineCounter++;
-			}
-			writer.close();
 		}
+		writer.close();
 		return true;
 	}
 
