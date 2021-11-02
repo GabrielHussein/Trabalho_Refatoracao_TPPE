@@ -1,36 +1,39 @@
 package main.java.project;
 
+import main.java.project.Persistencia;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import main.java.project.exception.ArquivoNaoEncontradoException;
 
-public class AnalysisReader {
-    
-	public List<String> openFile(String fileName) throws ArquivoNaoEncontradoException{
-		List<String> fileLines = new ArrayList<String>();
-		try{
+public class AnalysisReader extends Persistencia {
 
-			File file = new File("src/main/resources/" + fileName);
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			String line;
-        	while ((line = reader.readLine()) != null) {
-            	fileLines.add(line);
-        	}
-			reader.close();
-		} catch (Exception e) {
+	public List<String> openFile(String fileName) throws ArquivoNaoEncontradoException {
+		try{
+		BufferedReader reader = allocateObjects(fileName);
+		return super.readFileContent(reader, fileName);
+		}catch (Exception e) {
 			new ArquivoNaoEncontradoException(fileName);
 		}
-		return fileLines;
+		return Collections.emptyList();
 	}
 
-	public AnalysisReader(String fileName) throws ArquivoNaoEncontradoException{
+	private BufferedReader allocateObjects(String fileName) throws ArquivoNaoEncontradoException {
+		try {
+			File file = new File("src/main/resources/" + fileName);
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			return reader;
+		} catch (Exception e) {
+			throw new ArquivoNaoEncontradoException(fileName);
+		}
+	}
+
+	public AnalysisReader(String fileName) throws ArquivoNaoEncontradoException {
 		this.openFile(fileName);
 	}
-
-
 
 }
